@@ -24,30 +24,28 @@ const CssTextField = styled(TextField)({
   },
 });
 
-export function Form({ list, setList, items, setItems }) {
+export function Form({ state, dispatch }) {
+  const { list, title, toDo, id } = state;
   //it handles the formInput where use tried to enter and allocate dynamically
-  const handleChange = (e) => {
-    setItems({ ...items, [e.target.name]: e.target.value });
+  const handleTitle = (e) => {
+    dispatch({ type: "title", payload: e.target.value });
+  };
+
+  const handleToDo = (e) => {
+    dispatch({ type: "toDo", payload: e.target.value });
   };
 
   //it handles the inputs like title and task and ass into the screen.
   const handleSumbit = (e) => {
     e.preventDefault();
-    setList([
-      ...list,
-      {
-        id: Math.floor(Math.random() * 100) + 1,
-        title: items.title,
-        toDo: items.toDo,
-      },
-    ]);
-    setItems({ title: "", toDo: "" }); // reset the form input
-    // console.log("list", list);
-    // console.log("item", items);
+    dispatch({
+      type: "list",
+      payload: [...list, { title: title, toDo: toDo }],
+    });
   };
 
   const removeAll = () => {
-    setList([]);
+    dispatch({ type: "removeAll", payload: [] });
   };
 
   return (
@@ -62,9 +60,9 @@ export function Form({ list, setList, items, setItems }) {
           type="text"
           name="title"
           margin="dense"
-          value={items.title}
+          value={title}
           sx={{ border: "10px" }}
-          onChange={handleChange}
+          onChange={handleTitle}
           className="w-80 lg:w-96 h-10 rounded-md border-2 bg-purple-50"
           size="small"
         />
@@ -73,8 +71,8 @@ export function Form({ list, setList, items, setItems }) {
           variant="outlined"
           type="text"
           name="toDo"
-          value={items.toDo}
-          onChange={handleChange}
+          value={toDo}
+          onChange={handleToDo}
           className=" block w-80 lg:lg:w-90  h-10 rounded-md bg-purple-50"
           size="small"
         />
